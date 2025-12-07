@@ -1,10 +1,26 @@
 const asyncHandler = require('express-async-handler')
+const filelist = require('../models/fileModel')
 
 //@desc Post a file
 //@route POST /api/upload
 //@access public
 const uploadFile = asyncHandler(async (req,res) => {
-    res.json({message: 'Upload a file (auth required)'})
+    console.log(req.body)
+    const {filename,filepath, size, uploader, privacy} = req.body;
+    if(!filename || !filepath || !size || !uploader || !privacy) {
+        res.status(400);
+        throw new Error("All fields are mandatory !")
+    }
+
+    const newfile = await filelist.create({
+        filename,
+        filepath, 
+        size, 
+        uploader, 
+        privacy
+    })
+
+    res.status(201).json({newfile})
 })
 
 //@desc Get all public files
