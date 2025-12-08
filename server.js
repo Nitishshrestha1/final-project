@@ -3,7 +3,17 @@ const dotenv = require('dotenv').config();
 const filecontroll = require('./routes/filesRouter');
 const errorHandler = require('./middleware/errorHandler');
 const connectDb = require('./config/dbConnection');
+const multer = require('multer');
 const app = express();
+
+const storage = multer.diskStorage ({
+    destination: './uploads',
+    filename: (req,res,cb) => {
+        return cb(req.body.filename)
+    }
+})
+
+const upload = multer({storage})
 
 // middleware to connect with mongodb
 connectDb();
