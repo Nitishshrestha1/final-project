@@ -14,12 +14,11 @@ const uploadFile = asyncHandler(async (req,res) => {
 
     const newfile = await filelist.create({
         filename,
-        filepath, 
-        size, 
-        uploader, 
-        privacy
+        path, 
+        size,  
+        privacy,
+        uploaded_by
     })
-
     res.status(201).json({newfile})
 })
 

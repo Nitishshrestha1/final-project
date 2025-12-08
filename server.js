@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv').config();
 const filecontroll = require('./routes/filesRouter');
+const usercontroll = require('./routes/userRouter')
 const errorHandler = require('./middleware/errorHandler');
 const connectDb = require('./config/dbConnection');
 const multer = require('multer');
@@ -23,13 +24,7 @@ app.use(express.json())
 app.use(express.static('public'));
 
 // user controll routers
-app.post('/api/register', (req,res) => {
-    res.json({message: 'Register a new user'})
-})
-
-app.post('/api/login', (req,res) => {
-    res.json({message: 'Log in and receive a token'})
-})
+app.use('/api',usercontroll)
 
 // file controll routers
 app.use('/api', filecontroll)
