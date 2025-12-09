@@ -11,14 +11,54 @@
         <div style="width: 300px;;">
             <h1>Sign-in</h1>
             <hr>
-            <input type="text" placeholder="Email">
-            <input type="password" placeholder="password">
+            <input class="email" type="text" placeholder="Email">
+            <input class="password" type="password" placeholder="password">
+            <p style="color: red;" class="message"></p>
             <div style="display: flex; justify-content: right;">
                 <button class="submit" onclick="signin()">Submit</button>
             </div>
         </div>
     </div>
 
-    <script src="javascript.js"></script>
+    <script> 
+        const signin = async () => {
+            const email = document.querySelector('.email').value;
+            const password = document.querySelector('.password').value;
+
+            const message = document.querySelector('.message');
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if(!emailRegex.test(email)) {
+                message.innerHTML = 'Invalid email format'
+                return;
+            } else {
+                message.innerHTML = ' ';
+            }
+            try{
+                const res = await fetch('/api/login',{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({email, password})
+                })
+                const data = await res.json()
+
+                const accessToken = data.accessToken
+
+                localStorage.setItem('accessToken',JSON.stringify(accessToken));
+
+                if(res.ok){
+                    window.location.href = 'homepage.html';
+                } else {
+                    message.innerHTML = data.message || 'Signing failed'
+                }
+            
+            } catch(err) {
+                console.log(err)
+                message.innerHTML = 'Something went wrong'
+            }
+        }
+    </script>
 </body>
 </html>

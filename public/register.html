@@ -35,12 +35,16 @@
 
             if(!username || !email || !password || !cpassword){
                 message.innerHTML = 'All field must be field'
+                return;
             }else if (!emailRegex.test(email)) {
                 message.innerHTML = "Invalid email format"
+                return;
             }else if(password.length < 8){
                 message.innerHTML = 'Password must be atlease 8 character long'
+                return;
             }else if(password!=cpassword){
                 message.innerHTML = 'Password and confirm password are not same'
+                return;
             } else {
                 message.innerHTML=" ";
             }
