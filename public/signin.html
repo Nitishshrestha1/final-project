@@ -21,6 +21,33 @@
     </div>
 
     <script> 
+        const tokenCheck = async () => {
+            const message = document.querySelector('.message')
+            const token = JSON.parse(localStorage.getItem('accessToken')) || '';
+            console.log(token)
+
+            if(!token) {
+                return
+            } else {
+                const res = await fetch('/api/tokenCheck',{
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const data = await res.json();
+
+                if(res.ok){
+                    window.location.href = 'homepage.html'
+                } else {
+                    message.innerHTML = data.message || 'Token validation failed'
+                }
+
+            }
+        }
+        tokenCheck()
+
         const signin = async () => {
             const email = document.querySelector('.email').value;
             const password = document.querySelector('.password').value;

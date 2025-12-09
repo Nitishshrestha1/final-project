@@ -76,7 +76,13 @@ const loginUser = asyncHandler(async (req,res) => {
     }
 })
 
+const tokenCheck = asyncHandler (async (req,res) => {
+    const user = req.user;
+    res.status(200).json({user})
+})
+
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    tokenCheck
 }
