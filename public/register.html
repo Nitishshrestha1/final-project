@@ -11,11 +11,61 @@
         <div style="width: 300px;;">
             <h1>Register</h1>
             <hr>
-            <input type="text" placeholder="Username">
-            <input type="text" placeholder="Email">
-            <input type="password" placeholder="Password">
-            <input type="passowrd" placeholder="Confirm password">
+            <input class="username" type="text" placeholder="Username">
+            <input class="email" type="text" placeholder="Email">
+            <input class="password" type="password" placeholder="Password">
+            <input class="cpassword" type="password" placeholder="Confirm password">
+            <p style="color: red; white-space: nowrap;" class="message"></p>
+            <div style="display: flex; justify-content: right;">
+                <button class="submit" onclick="Register()">Submit</button>
+            </div>
+            
         </div>
     </div>
+
+    <script>
+        const Register = async () => {
+            const username = document.querySelector(".username").value
+            const email = document.querySelector(".email").value
+            const password = document.querySelector(".password").value
+            const cpassword = document.querySelector(".cpassword").value
+            
+            const message = document.querySelector('.message')
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if(!username || !email || !password || !cpassword){
+                message.innerHTML = 'All field must be field'
+            }else if (!emailRegex.test(email)) {
+                message.innerHTML = "Invalid email format"
+            }else if(password.length < 8){
+                message.innerHTML = 'Password must be atlease 8 character long'
+            }else if(password!=cpassword){
+                message.innerHTML = 'Password and confirm password are not same'
+            } else {
+                message.innerHTML=" ";
+            }
+
+            try{
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({username, email, password})
+                })
+                const data = await res.json();
+                
+                if(res.ok) {
+                    window.location.href = 'index.html'
+                } else {
+                    message.innerHTML = data.message || "Registration failed"
+                }
+            }
+            catch(err){
+                console.error(err);
+                message.innserHTML = 'Something went wrong'
+            }
+        }
+    </script>
 </body>
 </html>

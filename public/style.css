@@ -31,7 +31,7 @@ hr {
     border-radius: 10px;  
 }
 
-.btn-register, .btn-signin {
+.btn-register, .btn-signin, .submit {
     text-decoration: none;
     color: black;
     font-size: 25px;
@@ -43,8 +43,13 @@ hr {
     margin-right: 8px;
 }
 
+.submit {
+    font-size: 18px;
+}
+
 input {
     margin: 5px;
     padding: 5px;
     font-size: 20px;
+    width: 275px;
 }
