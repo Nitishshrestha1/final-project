@@ -7,8 +7,10 @@ const {
     downloadFile,
     deleteFile
 } = require('../controller/filesController.js')
+const validateToken = require('../middleware/validateTokenHandler.js')
+const upload = require('../middleware/uploadFile.js')
 
-router.post('/upload',uploadFile)
+router.post('/upload',validateToken,upload.single('media'),uploadFile)
 
 router.get('/public-file', getPublicFile)
 

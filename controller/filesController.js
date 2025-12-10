@@ -5,19 +5,23 @@ const filelist = require('../models/fileModel')
 //@route POST /api/upload
 //@access public
 const uploadFile = asyncHandler(async (req,res) => {
-    console.log(req.body)
-    const {filename,filepath, size, uploader, privacy} = req.body;
-    if(!filename || !filepath || !size || !uploader || !privacy) {
-        res.status(400);
-        throw new Error("All fields are mandatory !")
+
+    console.log("hello")
+    if(!req.file) {
+        res.status(400)
+        throw new Error('No file uploaded')
     }
 
+    console.log(req.file.originalname)
+
+    const privacySetting = req.body.privacy === 'public' ? 'public' : 'private'
+
     const newfile = await filelist.create({
-        filename,
-        path, 
-        size,  
-        privacy,
-        uploaded_by
+        filename: req.file.filename,
+        path: req.file.path, 
+        size: req.file.size,  
+        privacy: privacySetting,
+        uploaded_by: req.user.id
     })
     res.status(201).json({newfile})
 })

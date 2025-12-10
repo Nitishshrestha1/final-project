@@ -7,7 +7,7 @@ const validateToken = asyncHandler( async (req, res, next)=> {
     console.log(authHeader);
     if(authHeader && authHeader.startsWith("Bearer")) {
         token = authHeader.split(" ")[1];
-        console.log('hello');
+        console.log(token);
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
             if(err) {
                 res.status(401);
