@@ -93,6 +93,7 @@
         
         <label for="fileInput">Select File:</label>
         <input type="file" id="fileInput" name="userFile">
+        <input type="text" id="filename" placeholder="Write your file name">
         
         <div class="access-options">
             <input type="radio" id="public" name="access" value="public" checked>
@@ -112,23 +113,31 @@
     <script>
         const uploadfile = async () => {
             const token = JSON.parse(localStorage.getItem('accessToken'))
-            console.log(token);
+            let filename = document.querySelector('#filename').value
             let file = document.querySelector('#fileInput').files[0];
+            if(!file) return message.innerHTML = 'No file to upload';
 
             const privacy = document.querySelector('input[name="access"]:checked').value;
 
             const message = document.querySelector('.message')
-            console.log(file);
-            if(!file) return message.innerHTML = 'No file to upload';
+            const filetype = file.type
+
+            if(filetype==='application/pdf') {
+                filename = `${filename}.pdf`
+            } else if(filetype === 'video/mp4') {
+                filename = `${filename}.mp4`
+            } else {
+                message.innerHTML = 'File must be either pdf of mp4'
+            }
 
             let formData = new FormData();
             formData.append('media', file);
-            formData.append('privacy', privacy)
 
-            console.log(formData.privacy)
+            console.log(filename)
+
 
             try{    
-                const res = await fetch('/api/upload', {
+                const res = await fetch(`/api/upload?name=${filename}&privacy=${privacy}`, {
                     method: 'POST',
                     headers: {
                         "Authorization": `Bearer ${token}`
