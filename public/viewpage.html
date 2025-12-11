@@ -48,7 +48,7 @@
             color: #333;
             font-weight: 700;
         }
-        input[type="button"] {
+        input[type="button"], button {
             padding: 8px 15px;
             margin-right: 5px;
             border: none;
@@ -58,18 +58,18 @@
             font-weight: 600;
             transition: background-color 0.3s;
         }
-        input[value="Download"] {
+        input[value="Download"], .btn-download {
             background-color: #007bff;
             color: white;
         }
-        input[value="Download"]:hover {
+        input[value="Download"]:hover, .btn-download:hover {
             background-color: #0056b3;
         }
-        input[value="Delete"] {
+        input[value="Delete"], .btn-delete {
             background-color: #dc3545;
             color: white;
         }
-        input[value="Delete"]:hover {
+        input[value="Delete"]:hover, .btn-delete:hover {
             background-color: #c82333;
         }
         .nav-links {
@@ -109,8 +109,8 @@
                 <tr>
                     <td>photo_001.jpg</td>
                     <td>
-                        <input type="button" value="Download">
-                        <input type="button" value="Delete" onclick="window.location.href='delete.html'">
+                        <button class="btn-delete" data-file-name = ${element}>Delete</button>
+                        <button class="btn-download" data-file-name = ${element}>Download</button>
                     </td>
                 </tr>
             </tbody>
@@ -130,8 +130,8 @@
                 viewHTML += `<tr>
                     <td>${element}</td>
                     <td>
-                        <input type="button" value="Download">
-                        <input type="button" value="Delete" onclick="window.location.href='delete.html'">
+                        <button class="btn-delete" data-file-name = ${element}>Delete</button>
+                        <button class="btn-download" data-file-name = ${element}>Download</button>
                     </td>
                 </tr>`
             });
@@ -141,6 +141,26 @@
         }
 
         loadfiles()
+
+        
+        console.log(document.querySelectorAll('.btn-download'))
+        document.querySelectorAll('.btn-download').forEach((button) => {
+            button.addEventListener('click',async () => {
+                const filename = button.dataset.filename;
+                console.log(filename)
+
+                try{
+                    const res = await fetch(`/api/files/${filename}/download`)
+                    const data = await res.download()
+
+                }
+                catch(err){
+                    console.log(err)
+                }
+            })
+        })
+
+
     </script>
 </body>
 </html>

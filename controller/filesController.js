@@ -87,8 +87,29 @@ const getMyFile = asyncHandler(async (req,res) => {
 //@route GET /api/files/:id/download
 //@access public
 const downloadFile = asyncHandler(async (req,res) => {
-    
-    res.json({message: "Download file (permission check)"})
+    // filename = 'nitish.pdf'
+    // const file = await filelist.findOne({filename})
+    // res.json({file})
+
+    const { fileName } = req.params;
+    const filePath = path.join(__dirname,'..','uploads', 'nitish.pdf');
+
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+      if (err) {
+        return res.status(404).send('File not found.');
+      }
+
+      res.setHeader('Content-Type', 'application/octet-stream');
+      res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+
+      const fileStream = fs.createReadStream(filePath);
+      fileStream.pipe(res);
+
+      fileStream.on('error', (streamErr) => {
+        console.error('Error streaming file:', streamErr);
+        res.status(500).send('Error downloading file.');
+      });
+    });
 })
 
 //@desc Delete a file
