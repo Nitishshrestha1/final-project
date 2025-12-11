@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { Schema } = mongoose;
 
 const fileSchema = mongoose.Schema({
     filename: {
@@ -20,7 +21,8 @@ const fileSchema = mongoose.Schema({
         default: 'private'
     },
     uploaded_by: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'User', // Assume your user model is named 'User'
         require: [true, 'Uploader name is required']
     },
     uploaded_at: {

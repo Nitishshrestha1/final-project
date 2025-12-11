@@ -128,7 +128,9 @@
                 filename = `${filename}.mp4`
             } else {
                 message.innerHTML = 'File must be either pdf of mp4'
+                return;
             }
+            message.innerHTML = " "
 
             let formData = new FormData();
             formData.append('media', file);

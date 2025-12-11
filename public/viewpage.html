@@ -95,14 +95,12 @@
             <thead>
                 <tr>
                     <th>File Name</th>
-                    <th>Description</th>
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="viewTable">
                 <tr>
                     <td>report_Q3.pdf</td>
-                    <td>Quarterly financial summary.</td>
                     <td>
                         <input type="button" value="Download">
                         <input type="button" value="Delete" onclick="window.location.href='delete.html'">
@@ -110,7 +108,6 @@
                 </tr>
                 <tr>
                     <td>photo_001.jpg</td>
-                    <td>Vacation memory.</td>
                     <td>
                         <input type="button" value="Download">
                         <input type="button" value="Delete" onclick="window.location.href='delete.html'">
@@ -120,8 +117,30 @@
         </table>
         
         <div class="nav-links">
-            <a href="upload.html">Upload New File</a> | <a href="logout.html">Logout</a>
+            <a href="homepage.html">Upload New File</a> | <a href="logout.html">Logout</a>
         </div>
     </div>
+    <script>
+        const loadfiles = async () => {
+            const res = await fetch(`/api/public-file`)
+            const data = await res.json()
+
+            let viewHTML =''
+            data.files.forEach(element => {
+                viewHTML += `<tr>
+                    <td>${element}</td>
+                    <td>
+                        <input type="button" value="Download">
+                        <input type="button" value="Delete" onclick="window.location.href='delete.html'">
+                    </td>
+                </tr>`
+            });
+
+            document.querySelector('.viewTable').innerHTML = viewHTML
+
+        }
+
+        loadfiles()
+    </script>
 </body>
 </html>

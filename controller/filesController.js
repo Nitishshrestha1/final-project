@@ -1,4 +1,6 @@
 const asyncHandler = require('express-async-handler')
+const fs = require('fs')
+const path = require('path')
 const filelist = require('../models/fileModel')
 
 //@desc Post a file
@@ -30,20 +32,62 @@ const uploadFile = asyncHandler(async (req,res) => {
 //@route GET /api/public-file
 //@access public
 const getPublicFile = asyncHandler(async (req,res) => {
-    res.json({message: 'Retieve all public files'})
+    const folderPath = path.join(__dirname, "..", "uploads");
+
+    fs.readdir(folderPath, (err, files) => {
+        if (err) {
+            console.error("Error reading directory:", err);
+            return;
+        }
+
+        console.log("Files in directory:", files);
+        res.status(200).json({files})
+
+        files.forEach(file => {
+            const fullPath = path.join(folderPath, file);
+            console.log("Full path:", fullPath);
+        });
+    });
+
 })
 
 //@desc Get my files
 //@route GET /api/my-files
 //@access public
 const getMyFile = asyncHandler(async (req,res) => {
-    res.json({message: "Retrive logged-in user's files"})
+    try {
+        const files = await filelist.find({
+            privacy: "public" 
+        })
+        .select('filename size uploadedAt userId')
+        .populate({
+            path: 'userId',
+            select: 'username -_id'
+        })
+        .sort({ uploadedAt: -1 }) 
+        .lean();
+
+        const formattedFiles = files.map(file => ({
+            
+            id: file._id,
+            filename: file.filename,
+            size: file.size,
+            uploadedBy: file.userId ? file.userId.username : 'Unknown', 
+            uploadedAt: file.uploadedAt,
+        }));
+
+        res.json({ files: formattedFiles });
+    } catch (error) {
+        console.error("Fetch public files error:", error);
+        res.status(500).json({ error: "Failed to fetch public files" });
+    }
 })
 
 //@desc Download a file
 //@route GET /api/files/:id/download
 //@access public
 const downloadFile = asyncHandler(async (req,res) => {
+    
     res.json({message: "Download file (permission check)"})
 })
 
